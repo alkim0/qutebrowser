@@ -46,7 +46,9 @@ from qutebrowser.qt import core, gui, webkit
 if webkit:
     qWebKitVersion = webkit.qWebKitVersion
 else:
+    # pylint: disable=unnecessary-lambda-assignment
     qWebKitVersion = lambda: None  # type: ignore[assignment]  # noqa: N816
+    # pylint: enable=unnecessary-lambda-assignment
 
 
 MAXVALS = {
