@@ -65,6 +65,7 @@ per-file-ignores =
     tests/unit/browser/test_history.py : D100,D101,N806
     tests/helpers/fixtures.py : D100,D101,N806
     tests/unit/browser/webkit/http/test_content_disposition.py : D100,D101,D400
+    qutebrowser/qt.py : N813
 copyright-check = True
 copyright-regexp = # Copyright [\d-]+ .*
 copyright-min-file-size = 110

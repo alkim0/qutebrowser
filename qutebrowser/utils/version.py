@@ -52,11 +52,9 @@ if TYPE_CHECKING:
 
 
 if webkit:
-    qWebKitVersion = webkit.qWebKitVersion
+    qWebKitVersion = webkit.qWebKitVersion  # noqa: N816
 else:
-    # pylint: disable=unnecessary-lambda-assignment
-    qWebKitVersion = lambda: None  # type: ignore[assignment]  # noqa: N816
-    # pylint: enable=unnecessary-lambda-assignment
+    qWebKitVersion = lambda: None  # pylint: disable=unnecessary-lambda-assignment  # type: ignore[assignment]  # noqa: N816
 
 
 if webenginecore:

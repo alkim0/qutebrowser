@@ -23,11 +23,13 @@
 import importlib
 from dataclasses import dataclass
 
+
 @dataclass
 class _Machinery:
     IS_QT6: bool
     IS_QT5: bool
     PACKAGE: str
+
 
 PyQt5 = PyQt6 = False
 try:
@@ -106,7 +108,7 @@ try:
         ]:
             setattr(webenginecore, attr, getattr(webenginewidgets, attr))
             delattr(webenginewidgets, attr)
-        webenginecore.QWebEngineDownloadRequest = getattr(
+        webenginecore.QWebEngineDownloadRequest = getattr(  # noqa: B009
             webenginecore,
             "QWebEngineDownloadItem",
         )
