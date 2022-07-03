@@ -122,6 +122,14 @@ def _apply_platform_markers(config, item):
          f"Only runs on Qt 6, not {machinery.PACKAGE}"),
         ('qt5_xfail', pytest.mark.xfail, machinery.IS_QT5, "Fails on Qt 5"),
         ('qt6_xfail', pytest.mark.skipif, machinery.IS_QT6, "Fails on Qt 6"),
+        ('qtwebkit_skip',
+         pytest.mark.skipif,
+         config.webengine is False,
+         "Tests not applicable with QtWebKit"),
+        ('qtwebengine_skip',
+         pytest.mark.skipif,
+         config.webengine is True,
+         "Tests not applicable with QtWebEngine"),
     ]
 
     for searched_marker, new_marker_kind, condition, default_reason in markers:

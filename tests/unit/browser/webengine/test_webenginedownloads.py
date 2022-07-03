@@ -24,11 +24,17 @@ import pytest
 
 from qutebrowser.qt import webenginecore
 from qutebrowser.utils import urlutils, usertypes, utils
-from qutebrowser.browser.webengine import webenginedownloads
 from helpers import testutils
 
 
+# skip conditions
+pytestmark = [pytest.mark.qtwebkit_skip]
 testutils.qt_module_skip('webenginecore')
+
+# delayed imports
+webenginedownloads = pytest.importorskip(
+    'qutebrowser.browser.webengine.webenginedownloads'
+)
 
 
 @pytest.mark.parametrize('path, expected', [

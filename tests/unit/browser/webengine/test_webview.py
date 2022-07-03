@@ -21,11 +21,17 @@ import re
 import dataclasses
 
 import pytest
-webview = pytest.importorskip('qutebrowser.browser.webengine.webview')
 
 from qutebrowser.qt import webenginecore
-
 from helpers import testutils
+
+
+# skip conditions
+pytestmark = [pytest.mark.qtwebkit_skip]
+QtWebEngineCore = testutils.qt_module_skip("webenginecore")
+
+# delayed imports
+webview = pytest.importorskip('qutebrowser.browser.webengine.webview')
 
 
 @dataclasses.dataclass

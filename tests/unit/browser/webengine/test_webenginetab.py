@@ -25,15 +25,21 @@ import textwrap
 import pytest
 
 from qutebrowser.browser import greasemonkey
-from qutebrowser.browser.webengine import webenginetab
 from qutebrowser.utils import usertypes
 from helpers import testutils
 
 
+# skip conditions
+pytestmark = [pytest.mark.qtwebkit_skip]
 QtWebEngineCore = testutils.qt_module_skip("webenginecore")
+
+# delayed imports
 QWebEnginePage = QtWebEngineCore.QWebEnginePage
 QWebEngineScriptCollection = QtWebEngineCore.QWebEngineScriptCollection
 QWebEngineScript = QtWebEngineCore.QWebEngineScript
+webenginetab = pytest.importorskip(
+    'qutebrowser.browser.webengine.webenginetab'
+)
 
 
 pytestmark = pytest.mark.usefixtures('greasemonkey_manager')

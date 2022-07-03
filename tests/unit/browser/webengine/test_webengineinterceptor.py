@@ -20,13 +20,21 @@
 """Test interceptor.py for webengine."""
 
 
+import pytest
+
 from qutebrowser.qt import webenginecore
-from qutebrowser.browser.webengine import interceptor
 from qutebrowser.utils import qtutils
 from helpers import testutils
 
 
+# skip conditions
+pytestmark = [pytest.mark.qtwebkit_skip]
 testutils.qt_module_skip('webenginecore')
+
+# delayed imports
+interceptor = pytest.importorskip(
+    'qutebrowser.browser.webengine.interceptor'
+)
 
 
 def test_no_missing_resource_types():
