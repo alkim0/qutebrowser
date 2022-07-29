@@ -44,6 +44,8 @@ ConfigChangedHookType = Callable[[], None]
 BeforeLoadHookType = Callable[['apitypes.Tab', QUrl], None]
 LoadStartedHookType = Callable[['apitypes.Tab'], None]
 LoadFinishedHookType = Callable[['apitypes.Tab', bool], None]
+CookieAddedHookType = Callable[['apitypes.Cookie', 'apitypes.CookieJar'], None]
+CookieRemovedHookType = Callable[['apitypes.Cookie', 'apitypes.CookieJar'], None]
 
 
 @dataclasses.dataclass
@@ -77,6 +79,9 @@ class ModuleInfo:
     load_started_hooks: List[LoadStartedHookType] = dataclasses.field(
         default_factory=list)
     load_finished_hooks: List[LoadFinishedHookType] = dataclasses.field(
+    cookie_added_hooks: List[CookieAddedHookType] = dataclasses.field(
+        default_factory=list)
+    cookie_removed_hooks: List[CookieRemovedHookType] = dataclasses.field(
         default_factory=list)
 
 
@@ -194,6 +199,32 @@ def run_load_finished_hooks(tab: 'apitypes.Tab', ok: bool) -> None:
             continue
         for hook in mod_info.load_finished_hooks:
             hook(tab, ok)
+
+
+@pyqtSlot('apitypes.Cookie')
+def run_cookie_added_hooks(
+    cookie_jar: 'apitypes.CookieJar',
+    cookie: 'apitypes.Cookie'
+) -> None:
+    """Run all cookie_added hooks."""
+    for mod_info in _module_infos:
+        if mod_info.skip_hooks:
+            continue
+        for hook in mod_info.cookie_added:
+            hook(cookie, cookie_jar)
+
+
+@pyqtSlot('apitypes.Cookie')
+def run_cookie_removed_hooks(
+    cookie_jar: 'apitypes.CookieJar',
+    cookie: 'apitypes.Cookie'
+) -> None:
+    """Run all cookie_removed hooks."""
+    for mod_info in _module_infos:
+        if mod_info.skip_hooks:
+            continue
+        for hook in mod_info.cookie_removed:
+            hook(cookie, cookie_jar)
 
 
 def init() -> None:

@@ -168,3 +168,47 @@ class load_finished:
         info = _add_module_info(func)
         info.load_finished_hooks.append(func)
         return func
+
+
+class cookie_added:
+
+    """Decorator to get notified added cookies.
+
+    The decorated function gets called with a :class:`qutebrowser.api.apitypes.Cookie`
+    representing the cookie added, and a :class:`qutebrowser.api.apitypes.CookieJar`
+    representing the cookie jar the cookie was added to.
+
+    Example::
+
+        @hook.cookie_added()
+        def do_something(cookie, cookie_jar):
+            ...
+    """
+
+    def __call__(self, func: loader.CookieAddedHookType) -> loader.CookieAddedHookType:
+        info = _add_module_info(func)
+        info.cookie_added_hooks.append(func)
+        return func
+
+
+class cookie_removed:
+
+    """Decorator to get notified removed cookies.
+
+    The decorated function gets called with a :class:`qutebrowser.api.apitypes.Cookie`
+    representing the cookie removed, and a :class:`qutebrowser.api.apitypes.CookieJar`
+    representing the cookie jar the cookie was removed from.
+
+    Example::
+
+        @hook.cookie_removed()
+        def do_something(cookie, cookie_jar):
+            ...
+    """
+
+    def __call__(
+        self, func: loader.CookieRemovedHookType
+    ) -> loader.CookieRemovedHookType:
+        info = _add_module_info(func)
+        info.cookie_removed_hooks.append(func)
+        return func

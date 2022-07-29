@@ -19,8 +19,11 @@
 
 """Filter for QtWebEngine cookies."""
 
+import functools
+
 from qutebrowser.config import config
-from qutebrowser.utils import utils, log
+from qutebrowser.browser.cookies import AbstractCookieJar
+from qutebrowser.utils import utils, log, usertypes
 from qutebrowser.misc import objects
 
 
@@ -57,3 +60,30 @@ def _accept_cookie(request):
 def install_filter(profile):
     """Install the cookie filter on the given profile."""
     profile.cookieStore().setCookieFilter(_accept_cookie)
+
+
+class WebEngineCookieJar(AbstractCookieJar):
+    def __init__(self, profile: QWebEngineProfile, id_: str) -> None:
+        self._profile = profile
+        self._id = id_
+        self._profile.cookieStore().cookieAdded.connect(
+            lambda qcookie: functools.partial(
+                extensions_loader.run_cookie_added_hooks, self)
+            )(usertypes.Cookie(qcookie))
+        )
+        self._profile.cookieStore().cookieRemoved.connect(
+            lambda qcookie: functools.partial(
+                extensions_loader.run_cookie_removed_hooks, self)
+            )(usertypes.Cookie(qcookie))
+        )
+
+    def id(self) -> str:
+        return self._id
+
+    def set_cookie(self, cookie: usertypes.Cookie) -> None:
+        """Adds a cookie to the cookie jar."""
+        self._profile.cookieStore().setCookie(cookie)
+
+    def delete_cookie(self, cookie: usertypes.Cookie) -> None:
+        """Removes the cookie from the cookie jar."""
+        self.profile.cookieStore().deleteCookie(cookie)

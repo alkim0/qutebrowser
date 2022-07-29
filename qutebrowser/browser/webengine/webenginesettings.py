@@ -24,6 +24,7 @@ Module attributes:
                 constants.
 """
 
+import functools
 import os
 import operator
 from typing import cast, Any, List, Optional, Tuple, Union, TYPE_CHECKING
@@ -35,8 +36,10 @@ from PyQt5.QtWebEngineWidgets import QWebEngineSettings, QWebEngineProfile
 from qutebrowser.browser import history
 from qutebrowser.browser.webengine import (spell, webenginequtescheme, cookies,
                                            webenginedownloads, notification)
+from qutebrowser.browser.cookies import set_default_cookie_jar, set_private_cookie_jar
 from qutebrowser.config import config, websettings
 from qutebrowser.config.websettings import AttributeInfo as Attr
+from qutebrowser.extensions import loader as extensions_loader
 from qutebrowser.utils import (standarddir, qtutils, message, log,
                                urlmatch, usertypes, objreg, version)
 if TYPE_CHECKING:
@@ -417,6 +420,7 @@ def _init_default_profile():
         os.path.join(standarddir.data(), 'webengine'))
 
     _init_profile(default_profile)
+    set_default_cookie_jar(cookies.WebEngineCookieJar(default_profile, "default"))
 
 
 def init_private_profile():
@@ -429,6 +433,7 @@ def init_private_profile():
     private_profile = QWebEngineProfile()
     assert private_profile.isOffTheRecord()
     _init_profile(private_profile)
+    set_private_cookie_jar(cookies.WebEngineCookieJar(default_profile, "private"))
 
 
 def _init_site_specific_quirks():

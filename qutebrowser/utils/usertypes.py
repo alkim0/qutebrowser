@@ -22,10 +22,11 @@
 import html
 import operator
 import enum
+from datetime import datetime
 import dataclasses
-from typing import Optional, Sequence, TypeVar, Union
+from typing import Optional, Sequence, TypeVar, Union, Tuple
 
-from PyQt5.QtCore import pyqtSignal, pyqtSlot, QObject, QTimer
+from PyQt5.QtCore import pyqtSignal, pyqtSlot, QObject, QTimer, QNetworkCookie
 from PyQt5.QtCore import QUrl
 
 from qutebrowser.utils import log, qtutils, utils
@@ -546,3 +547,12 @@ class NavigationRequest:
     navigation_type: Type
     is_main_frame: bool
     accepted: bool = True
+
+
+class Cookie(QNetworkCookie):
+
+    """A wrapper over QNetworkCookie."""
+
+    def id(self) -> Tuple[bytes, str, str]:
+        """Returns the identifier for this cookie: (name, domain, path)."""
+        return (self.name(), self.domain(), self.path())
